@@ -20,12 +20,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const path = require("node:path");
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 app.use(errorHandler);
 app.use(notFound);
+app.use(express.static(path.join(__dirname, "/client/build")));
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
 const server = app.listen(
   PORT,
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)
